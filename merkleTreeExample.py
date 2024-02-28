@@ -36,17 +36,29 @@ class MerkleTree:
             else:
                 leaf_hash = hash(leaf_hash + sibling_hash)
         return leaf_hash == root
+    
+    def print_tree(self):
+        for level, nodes in enumerate(reversed(self.tree)):
+            indent = "  " * (len(self.tree) - level - 1)  # Indentation for hierarchical structure
+            print(f"{indent}Level {len(self.tree) - level - 1}: ", end="")
+            for node in nodes:
+                truncated_node = node[:6] + "..."  # Truncate hash for readability
+                print(f"[{truncated_node}]", end=" ")
+            print()  # Newline for the next level
 
 
 # Example usage
 leaves = ['data1', 'data2', 'data3', 'data4']
 merkle_tree = MerkleTree(leaves)
+
+merkle_tree.print_tree()
+
 root = merkle_tree.get_root()
 print(root)  # 9d5f1d8b
 
-index = 2  # For 'data3'
+index = 2  # For 'data3', 0-based index
 proof = merkle_tree.get_proof(index)
-print(proof)  # [('f7f3e4e7', 1), ('d3e3e3e3', 0), ('9d5f1d8b', 1)]
+print(proof)  
 
 is_valid = merkle_tree.verify_proof('data3', proof, root)
 print(f"Proof Valid: {is_valid}")
